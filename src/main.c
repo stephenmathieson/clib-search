@@ -20,6 +20,25 @@
   printf("\n");                                           \
 })
 
+static void usage() {
+  printf("\n");
+  printf("  clib-search [options] [keyword ...]\n");
+  printf("\n");
+  printf("  Options:\n");
+  printf("\n");
+  printf("    -h, --help     Output usage information\n");
+  printf("    -V, --version  Output the current version\n");
+  printf("\n");
+  printf("  Examples:\n");
+  printf("\n");
+  printf("    # search for foo, bar and baz\n");
+  printf("    clib-search foo bar baz\n");
+  printf("\n");
+  printf("    # show all registered packages\n");
+  printf("    clib-search\n");
+  printf("\n");
+}
+
 /**
  * Check if the given `pkg` matches any `args`.
  */
@@ -48,6 +67,9 @@ int main(int argc, char *argv[]) {
     // print version and exit
     if (0 == strcmp(arg, "-V") || 0 == strcmp(arg, "--version")) {
       printf("%s\n", CLIB_SEARCH_VERSION);
+      return 0;
+    } else if (0 == strcmp(arg, "-h") || 0 == strcmp(arg, "--help")) {
+      usage();
       return 0;
     }
     // lowercase all args here

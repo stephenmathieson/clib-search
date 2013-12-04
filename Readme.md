@@ -3,6 +3,29 @@
 
   WIP port of clib-search(1) to C
 
+## Installation
+
+  TODO
+
+## Usage
+
+```
+  clib-search [options] [keyword ...]
+
+  Options:
+
+    -h, --help     Output usage information
+    -V, --version  Output the current version
+
+  Examples:
+
+    # search for foo, bar and baz
+    clib-search foo bar baz
+
+    # show all registered packages
+    clib-search
+```
+
 ## License
 
 (The MIT License)
