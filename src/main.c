@@ -15,30 +15,6 @@
 #include "commander.h"
 #include "clib-search.h"
 
-
-/**
- * Output usage information
- */
-
-static void usage() {
-  printf("\n");
-  printf("  clib-search [options] [keyword ...]\n");
-  printf("\n");
-  printf("  Options:\n");
-  printf("\n");
-  printf("    -h, --help     Output usage information\n");
-  printf("    -V, --version  Output the current version\n");
-  printf("\n");
-  printf("  Examples:\n");
-  printf("\n");
-  printf("    # search for foo, bar and baz\n");
-  printf("    clib-search foo bar baz\n");
-  printf("\n");
-  printf("    # show all registered packages\n");
-  printf("    clib-search\n");
-  printf("\n");
-}
-
 /**
  * Check if the given `pkg` matches any `args`.
  */
@@ -71,7 +47,6 @@ static int matches(int count, char *args[], package_t *pkg) {
  */
 
 int main(int argc, const char **argv) {
-
   command_t program;
   command_init(&program, "clib-search", CLIB_SEARCH_VERSION);
   program.usage = "[options] [query ...]";
