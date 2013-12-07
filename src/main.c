@@ -9,10 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "clib-search.h"
 #include "wiki-registry.h"
 #include "case.h"
 #include "substr.h"
+#include "commander.h"
+#include "clib-search.h"
 
 
 /**
@@ -50,14 +51,14 @@ static int matches(int count, char *args[], package_t *pkg) {
   if (name) {
     name++; // remove "/"
     case_lower(name);
-    for (int i = 1; i < count; i++) {
+    for (int i = 0; i < count; i++) {
       char *idx = strstr(name, args[i]);
       if (idx) return 1;
     }
   }
 
 
-  for (int i = 1; i < count; i++) {
+  for (int i = 0; i < count; i++) {
     char *idx = strstr(description, args[i]);
     if (idx) return 1;
   }
@@ -69,20 +70,12 @@ static int matches(int count, char *args[], package_t *pkg) {
  * Entry point.
  */
 
-int main(int argc, char *argv[]) {
-  for (int i = 1; i < argc; i++) {
-    char *arg = argv[i];
-    // print version and exit
-    if (0 == strcmp(arg, "-V") || 0 == strcmp(arg, "--version")) {
-      printf("%s\n", CLIB_SEARCH_VERSION);
-      return 0;
-    } else if (0 == strcmp(arg, "-h") || 0 == strcmp(arg, "--help")) {
-      usage();
-      return 0;
-    }
-    // lowercase all args here
-    case_lower(argv[i]);
-  }
+int main(int argc, const char **argv) {
+
+  command_t program;
+  command_init(&program, "clib-search", CLIB_SEARCH_VERSION);
+  program.usage = "[options] [query ...]";
+  command_parse(&program, argc, argv);
 
   // TODO local 5h cache like current node impl
   list_t *pkgs = wiki_registry(CLIB_WIKI_URL);
@@ -91,7 +84,7 @@ int main(int argc, char *argv[]) {
   list_iterator_t *it = list_iterator_new(pkgs, LIST_HEAD);
   while ((node = list_iterator_next(it))) {
     package_t *pkg = (package_t *) node->val;
-    if (1 == argc || matches(argc, argv, pkg)) {
+    if (0 == program.argc || matches(program.argc, program.argv, pkg)) {
       printf("  \033[36m%s\033[m\n", pkg->repo);
       printf("  url: \033[90m%s\033[m\n", pkg->href);
       printf("  desc: \033[90m%s\033[m\n", pkg->description);

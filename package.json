@@ -7,7 +7,8 @@
   "dependencies": {
     "stephenmathieson/wiki-registry.c": "master",
     "stephenmathieson/case.c": "master",
-    "stephenmathieson/substr.c": "master"
+    "stephenmathieson/substr.c": "master",
+    "clibs/commander": "master"
   },
   "install": "make install"
 }
