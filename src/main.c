@@ -12,13 +12,12 @@
 #include "clib-search.h"
 #include "wiki-registry.h"
 #include "case.h"
+#include "substr.h"
 
-#define display_package(pkg) ({                           \
-  printf("  \033[36m%s\033[m\n", pkg->repo);              \
-  printf("  url: \033[90m%s\033[m\n", pkg->href);         \
-  printf("  desc: \033[90m%s\033[m\n", pkg->description); \
-  printf("\n");                                           \
-})
+
+/**
+ * Output usage information
+ */
 
 static void usage() {
   printf("\n");
@@ -47,7 +46,16 @@ static int matches(int count, char *args[], package_t *pkg) {
   char *description = strdup(pkg->description);
   description = case_lower(description);
 
-  // TODO check repo name
+  char *name = strstr(pkg->repo, "/");
+  if (name) {
+    name++; // remove "/"
+    case_lower(name);
+    for (int i = 1; i < count; i++) {
+      char *idx = strstr(name, args[i]);
+      if (idx) return 1;
+    }
+  }
+
 
   for (int i = 1; i < count; i++) {
     char *idx = strstr(description, args[i]);
@@ -84,7 +92,10 @@ int main(int argc, char *argv[]) {
   while ((node = list_iterator_next(it))) {
     package_t *pkg = (package_t *) node->val;
     if (1 == argc || matches(argc, argv, pkg)) {
-      display_package(pkg);
+      printf("  \033[36m%s\033[m\n", pkg->repo);
+      printf("  url: \033[90m%s\033[m\n", pkg->href);
+      printf("  desc: \033[90m%s\033[m\n", pkg->description);
+      printf("\n");
     }
   }
   list_iterator_destroy(it);
