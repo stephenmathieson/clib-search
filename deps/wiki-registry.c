@@ -87,7 +87,7 @@ static void wiki_registry_iterate_nodes(GumboNode *node, list_t *packages, char 
       package_t *pkg = package_from_wiki_anchor(node);
       if (pkg) {
         pkg->category = strdup(category);
-        list_node_t *pkg_node = list_rpush(packages, list_node_new(pkg));
+        list_rpush(packages, list_node_new(pkg));
       }
     }
   } else {
@@ -110,6 +110,7 @@ static void wiki_registry_find_body(GumboNode* node, list_t *packages) {
     // temp category buffer, we'll populate this later
     char *category = malloc(1);
     wiki_registry_iterate_nodes(node, packages, category);
+    free(category);
     return;
   }
 
@@ -120,19 +121,26 @@ static void wiki_registry_find_body(GumboNode* node, list_t *packages) {
 }
 
 /**
+ * Parse a list of packages from the given `html`
+ */
+
+list_t *wiki_registry_parse(const char *html) {
+  GumboOutput *output = gumbo_parse(html);
+  list_t *pkgs = list_new();
+  wiki_registry_find_body(output->root, pkgs);
+  gumbo_destroy_output(&kGumboDefaultOptions, output);
+  return pkgs;
+}
+
+/**
  * Get a list of packages from the given GitHub wiki `url`.
  */
 
 list_t *wiki_registry(const char *url) {
-  response_t *res = http_get(url);
+  http_get_response_t *res = http_get(url);
   if (!res->ok) return NULL;
 
-  GumboOutput* output = gumbo_parse(res->data);
-
-  list_t *pkgs = list_new();
-  wiki_registry_find_body(output->root, pkgs);
-
-  gumbo_destroy_output(&kGumboDefaultOptions, output);
-
-  return pkgs;
+  list_t *list = wiki_registry_parse(res->data);
+  http_get_free(res);
+  return list;
 }

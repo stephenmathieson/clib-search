@@ -6,18 +6,23 @@
 // MIT licensed
 //
 
-#ifndef _HTTP_GET_H_
-#define _HTTP_GET_H_ 1
 
-struct ResponseData {
+#ifndef HTTP_GET_H
+#define HTTP_GET_H 1
+
+#define HTTP_GET_VERSION "0.1.0"
+
+typedef struct {
   char *data;
   size_t size;
   long status;
   int ok;
-};
+} http_get_response_t;
 
-typedef struct ResponseData response_t;
+http_get_response_t *http_get(const char *);
 
-response_t *http_get(const char *url);
+int http_get_file(const char *, const char *);
+
+void http_get_free(http_get_response_t *);
 
 #endif
