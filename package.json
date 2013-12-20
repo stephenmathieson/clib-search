@@ -5,10 +5,14 @@
   "description": "clib-search(1)",
   "license": "MIT",
   "dependencies": {
-    "stephenmathieson/wiki-registry.c": "master",
-    "stephenmathieson/case.c": "master",
-    "stephenmathieson/substr.c": "master",
-    "clibs/commander": "master"
+    "stephenmathieson/wiki-registry.c": "*",
+    "stephenmathieson/case.c": "0.1.0",
+    "stephenmathieson/substr.c": "0.1.0",
+    "clibs/commander": "*",
+    "stephenmathieson/str-copy.c": "0.0.3",
+    "jwerle/fs.c": "*",
+    "stephenmathieson/http-get.c": "*",
+    "jwerle/strsplit.c": "*"
   },
   "install": "make install"
 }

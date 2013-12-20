@@ -10,13 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "case.h"
-#include "commander.h"
-#include "fs.h"
-#include "http-get.h"
-#include "str-copy.h"
-#include "strsplit.h"
-#include "wiki-registry.h"
+#include "case/case.h"
+#include "commander/commander.h"
+#include "fs/fs.h"
+#include "http-get/http-get.h"
+#include "str-copy/str-copy.h"
+#include "strsplit/strsplit.h"
+#include "wiki-registry/wiki-registry.h"
 #include "clib-search.h"
 
 filter_t filter;

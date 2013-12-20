@@ -1,9 +1,7 @@
 
-#ifndef __STR_SPLIT_H__
-#define __STR_SPLIT_H__ 1
-
 #include <stdlib.h>
 #include <string.h>
+#include "strsplit.h"
 
 int
 strsplit (const char *str, char *parts[], const char *delimiter) {
@@ -24,6 +22,3 @@ strsplit (const char *str, char *parts[], const char *delimiter) {
   free(pch);
   return i;
 }
-
-
-#endif

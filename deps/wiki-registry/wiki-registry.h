@@ -10,7 +10,7 @@
 #ifndef __WIKI_REGISTRY__
 #define __WIKI_REGISTRY__ 1
 
-#include "list.h"
+#include "list/list.h"
 
 typedef struct {
   const char *repo;

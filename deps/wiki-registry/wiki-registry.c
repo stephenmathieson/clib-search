@@ -9,11 +9,11 @@
 #include <curl/curl.h>
 #include <string.h>
 #include <stdlib.h>
-#include "gumbo.h"
-#include "http-get.h"
+#include "gumbo-parser/gumbo.h"
+#include "http-get/http-get.h"
 #include "wiki-registry.h"
-#include "list.h"
-#include "substr.h"
+#include "list/list.h"
+#include "substr/substr.h"
 
 //
 // TODO find dox on gumbo so the node iteration isn't so ugly

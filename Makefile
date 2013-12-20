@@ -3,7 +3,7 @@ CC ?= cc
 BIN ?= clib-search
 PREFIX ?= /usr/local
 SRC = $(wildcard src/*.c)
-SRC += $(wildcard deps/*.c)
+SRC += $(wildcard deps/*/*.c)
 CFLAGS = -std=c99 -Wall -Ideps -Isrc
 LDFLAGS = -lcurl
 

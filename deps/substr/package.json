@@ -1,0 +1,17 @@
+{
+  "name": "substr",
+  "version": "0.1.0",
+  "repo": "stephenmathieson/substr.c",
+  "description": "Get a substring of a string",
+  "keywords": [ "substr", "substring", "string" ],
+  "license": "MIT",
+  "src": [
+    "src/substr.c",
+    "src/substr.h",
+    "deps/str-copy.c",
+    "deps/str-copy.h"
+  ],
+  "dependencies": {
+    "stephenmathieson/str-copy.c": "0.0.3"
+  }
+}
