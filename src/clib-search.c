@@ -9,11 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "wiki-registry.h"
+#include <time.h>
 #include "case.h"
 #include "commander.h"
-#include "clib-search.h"
+#include "fs.h"
+#include "http-get.h"
+#include "str-copy.h"
 #include "strsplit.h"
+#include "wiki-registry.h"
+#include "clib-search.h"
 
 filter_t filter;
 
@@ -21,9 +25,10 @@ filter_t filter;
  * Check if the given `pkg` matches any `args`.
  */
 
-static int matches(int count, char *args[], package_t *pkg) {
+static int
+matches(int count, char *args[], package_t *pkg) {
   char **parts = calloc(1, strlen(pkg->repo) - 1);
-  size_t size = strsplit(pkg->repo, parts, "/");
+  strsplit(pkg->repo, parts, "/");
 
   if (!filter.executables && 0 == strcmp(pkg->category, "executables")) return 0;
   if (!filter.utilities && 0 == strcmp(pkg->category, "utilities")) return 0;
@@ -55,23 +60,58 @@ static int matches(int count, char *args[], package_t *pkg) {
   return 0;
 }
 
-static void author(command_t *self) {
-  filter.author = self->arg;
+static void
+author(command_t *self) {
+  filter.author = (char *)self->arg;
 }
 
-static void executables(command_t *self) {
+static void
+executables(command_t *self) {
   filter.utilities = false;
 }
 
-static void utilities(command_t *self) {
+static void
+utilities(command_t *self) {
   filter.executables = false;
 }
+
+static char *
+wiki_html_cache() {
+  fs_stats *stats = fs_stat(CLIB_SEARCH_CACHE);
+  if (NULL == stats) {
+    goto set_cache;
+  }
+
+  long now = (long) time(NULL);
+  long modified = stats->st_mtime;
+  long delta = now - modified;
+
+  free(stats);
+
+  if (delta < CLIB_SEARCH_CACHE_TIME) {
+    return fs_read(CLIB_SEARCH_CACHE);
+  }
+
+set_cache:;
+
+  http_get_response_t *res = http_get(CLIB_WIKI_URL);
+  if (!res->ok) return NULL;
+
+  char *html = str_copy(res->data);
+  http_get_free(res);
+
+  if (NULL == html) return html;
+  fs_write(CLIB_SEARCH_CACHE, html);
+  return html;
+}
+
 
 /**
  * Entry point.
  */
 
-int main(int argc, const char **argv) {
+int
+main(int argc, char **argv) {
   filter.executables = true;
   filter.utilities = true;
 
@@ -83,8 +123,13 @@ int main(int argc, const char **argv) {
   command_option(&program, "-u", "--utilities", "filter by utilities", utilities);
   command_parse(&program, argc, argv);
 
-  // TODO local 5h cache like current node impl
-  list_t *pkgs = wiki_registry(CLIB_WIKI_URL);
+  char *html = wiki_html_cache();
+  if (NULL == html) {
+    fprintf(stderr, "Failed to fetch wiki HTML\n");
+    return 1;
+  }
+
+  list_t *pkgs = wiki_registry_parse(html);
 
   list_node_t *node;
   list_iterator_t *it = list_iterator_new(pkgs, LIST_HEAD);
