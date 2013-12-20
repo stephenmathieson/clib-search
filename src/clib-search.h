@@ -6,8 +6,8 @@
 // MIT licensed
 //
 
-#ifndef __CLIB_SEARCH_H__
-#define __CLIB_SEARCH_H__ 1
+#ifndef CLIB_SEARCH_H
+#define CLIB_SEARCH_H 1
 
 #define CLIB_SEARCH_VERSION "0.0.0"
 
